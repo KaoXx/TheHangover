@@ -1,23 +1,25 @@
 import random
 import os
 
-categories = ['truth', 'dare', 'coin', 'hot', 'clothing', 'shots']
+categories = ['Verdad', 'Reto', 'Moneda', 'Hot', 'Prenda', 'Shots']
 
 questions = {
-    'truth': [],
-    'dare': [],
-    'coin': [],
-    'hot': [],
-    'clothing': [],
-    'shots': []
+    'Verdad': [],
+    'Reto': [],
+    'Moneda': [],
+    'Hot': [],
+    'Prenda': [],
+    'Shots': []
 }
 
 def load_questions():
+    categories = ['Shots', 'Verdad', 'Moneda', 'Prenda', 'Hot', 'Reto']
+    questions = {}
     for category in categories:
-        file_path = os.path.join('questions', f'{category}.txt')
-        if os.path.exists(file_path):
-            with open(file_path, 'r') as file:
-                questions[category] = file.read().splitlines()
+        with open(f'questions/{category}.txt', 'r', encoding='utf-8') as file:
+            questions[category] = [line.strip() for line in file.readlines()]
+    return questions
+
 
 def spin_wheel():
     return random.choice(categories)

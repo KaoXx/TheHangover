@@ -39,7 +39,7 @@ body {
 
 .container {
     position: relative;
-    width: 100%;
+    width: 90%;
     height: auto;
     display: flex;
     justify-content: center;
@@ -47,7 +47,7 @@ body {
 }
 
 #wheel {
-    width: 80%; /* Adjust to take full width of container */
+    width: 100%; /* Adjust to take full width of container */
     height: auto; /* Maintain aspect ratio */
     margin-bottom: 1em;
     position: relative;

@@ -3,12 +3,11 @@ import random
 
 app = Flask(__name__)
 
-# Cargar preguntas desde archivos de texto
 def load_questions():
-    categories = ['shots', 'truth', 'coin', 'clothing', 'hot', 'dare']
+    categories = ['Shots', 'Verdad', 'Moneda', 'Prenda', 'Hot', 'Reto']
     questions = {}
     for category in categories:
-        with open(f'questions/{category}.txt', 'r') as file:
+        with open(f'questions/{category}.txt', 'r', encoding='utf-8') as file:
             questions[category] = [line.strip() for line in file.readlines()]
     return questions
 

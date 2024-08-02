@@ -28,10 +28,10 @@ let myChart = new Chart(wheel, {
     data: {
         labels: ["👹", "😇", "🍺", "👙", "🪙", "🔥"],
         datasets: [{
-            backgroundColor: "#6C4C6C", // Use an array of colors for each section
+            backgroundColor: "#6C4C6C",
             data: [1, 1, 1, 1, 1, 1],
-            borderColor: "#FFFFFF", // Borde de color blanco
-            borderWidth: 4 // Ancho del borde
+            borderColor: "#FFFFFF",
+            borderWidth: 4
         }],
     },
     options: {
@@ -52,31 +52,41 @@ let myChart = new Chart(wheel, {
     },
 });
 
-const valueGenerator = (angleValue) => {
+const valueGenerator = async (angleValue) => {
     for (let i of rotationValues) {
         if (angleValue >= i.minDegree && angleValue <= i.maxDegree) {
-            let resultText;
+            let category;
             switch (i.value) {
                 case 1:
-                    resultText = "reto";
+                    category = "Reto";
                     break;
                 case 2:
-                    resultText = "verdad";
+                    category = "Verdad";
                     break;
                 case 3:
-                    resultText = "trago";
+                    category = "Shots";
                     break;
                 case 4:
-                    resultText = "prenda";
+                    category = "Prenda";
                     break;
                 case 5:
-                    resultText = "moneda";
+                    category = "Moneda";
                     break;
                 case 6:
-                    resultText = "hot";
+                    category = "Hot";
                     break;
             }
-            finalValue.innerHTML = `<p>Resultado: ${resultText}</p>`;
+            finalValue.innerHTML = `<p>Resultado: ${category}</p>`;
+
+            // Fetch question from the server
+            try {
+                const response = await fetch(`/get_question/${category}`);
+                const data = await response.json();
+                finalValue.innerHTML = `<p>Categoria: ${category}<br>Resultado: ${data.question}</p>`;
+            } catch (error) {
+                finalValue.innerHTML = `<p>Error fetching question</p>`;
+            }
+
             spinBtn.disabled = false;
             break;
         }
@@ -88,18 +98,18 @@ let resultValue = 101;
 
 spinBtn.addEventListener("click", () => {
     spinBtn.disabled = true;
-    finalValue.innerHTML = `<p>Spinning the wheel. Good luck!</p>`;
-    let randomDegree = Math.floor(Math.random() * (355 - 0 + 1) + 0);
+    finalValue.innerHTML = `<p>Girando la ruleta. Buena suerte!</p>`;
+    let randomDegree = Math.floor(Math.random() * 360);
     let rotationInterval = window.setInterval(() => {
-        myChart.options.rotation = myChart.options.rotation + resultValue;
+        myChart.options.rotation = (myChart.options.rotation || 0) + resultValue;
         myChart.update();
         if (myChart.options.rotation >= 360) {
             count += 1;
             resultValue -= 5;
             myChart.options.rotation = 0;
-        } else if (count > 15 && myChart.options.rotation == randomDegree) {
-            valueGenerator(randomDegree);
+        } else if (count > 15 && (myChart.options.rotation || 0) >= randomDegree) {
             clearInterval(rotationInterval);
+            valueGenerator(randomDegree);
             count = 0;
             resultValue = 101;
         }
